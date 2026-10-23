@@ -34,20 +34,20 @@ export type TrackOptions = {
 
 export type RigKind = "part" | "model"
 
-export type Target = {
-	id: string,
-	instace: BasePart | Model,
-	kind: RigKind,
-	apply: boolean,
-	buffer: Buffer,
-}
-
 export type Buffer = {
 	push: (t: number, cf: CFrame) -> (),
 	newest: () -> number,
 	size: () -> number,
 	after: (t: number) -> Sample?,
 	before: (t: number) -> Sample?,
+}
+
+export type Target = {
+	id: string,
+	instace: BasePart | Model,
+	kind: RigKind,
+	apply: boolean,
+	buffer: Buffer,
 }
 
 export type Output = {
@@ -59,6 +59,7 @@ export type Stats = {
 	targets: number,
 	applied: number,
 	held: number,
+	stale: number,
 	renderTime: number,
 	newest: number,
 	delay: number,
