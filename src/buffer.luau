@@ -16,13 +16,13 @@ export type Buffer = typeof(setmetatable(
 	buffer
 ))
 
-function buffer.new(): buffer
+function buffer.new(): Buffer
 	const samples: { types.Sample } = {}
 	for i = 1, CAPACITY do
 		samples[i] = { t = 0, cf = CFrame.identity }
 	end
 
-	const self = setmetatable({
+	const self: Buffer = setmetatable({
 		_samples = samples,
 		_head = 0,
 		_count = 0,
@@ -30,8 +30,8 @@ function buffer.new(): buffer
 	return self
 end
 
-function buffer:push(t: number, cf: CFrame)
-	const slot_index = (self._head :: number) % CAPACITY + 1
+function buffer.push(self: Buffer, t: number, cf: CFrame)
+	const slot_index = self._head % CAPACITY + 1
 	const slot = self._samples[slot_index]
 	slot.t = t
 	slot.cf = cf
@@ -41,20 +41,20 @@ function buffer:push(t: number, cf: CFrame)
 	end
 end
 
-function buffer:newest(): number
+function buffer.newest(self: Buffer): number
 	if self._count == 0 then
 		return 0
 	end
 	return self._samples[self._head].t
 end
 
-function buffer:size(): number
+function buffer.size(self: Buffer): number
 	return self._count
 end
 
-function buffer:after(t: number): types.Sample?
+function buffer.after(self: Buffer, t: number): types.Sample?
 	for i = self._count, 1, -1 do
-		const index = ((self._head :: number) - i + CAPACITY) % CAPACITY + 1
+		const index = (self._head - i + CAPACITY) % CAPACITY + 1
 		const sample = self._samples[index]
 		if sample.t >= t then
 			return sample
@@ -63,9 +63,9 @@ function buffer:after(t: number): types.Sample?
 	return nil
 end
 
-function buffer:before(t: number): types.Sample?
+function buffer.before(self: Buffer, t: number): types.Sample?
 	for i = 1, self._count do
-		const index = ((self._head :: number) - i + CAPACITY) % CAPACITY + 1
+		const index = (self._head - i + CAPACITY) % CAPACITY + 1
 		const sample = self._samples[index]
 		if sample.t <= t then
 			return sample

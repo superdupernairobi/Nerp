@@ -39,7 +39,7 @@ export type Target = {
 	instace: BasePart | Model,
 	kind: RigKind,
 	apply: boolean,
-	buffer: any,
+	buffer: Buffer,
 }
 
 export type Buffer = {
