@@ -24,6 +24,8 @@ export type ClockConfig = {
 export type Clock = {
 	now: () -> number,
 	jump: (t: number) -> (),
+	advance: (dt: number, newest: number) -> (number, boolean),
+	delay: () -> number,
 }
 
 export type TrackOptions = {
