@@ -1,0 +1,23 @@
+[package]
+name = "superdupernairobi/nerp"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+description = "Interpolates server driven floats on the client. Buffers timestamped values and plays them back on a fixed delay behind the newest one."
+authors = ["superdupernairobi"]
+exclude = [
+    "dev",
+    "dev/**",
+    "place.project.json",
+    "rokit.toml",
+    "stylua.toml",
+    "selene.toml",
+    ".github",
+    ".github/**",
+    "sourcemap.json",
+    "globalTypes.d.luau",
+    "build",
+    "build/**",
+    "*.rbxm"
+]

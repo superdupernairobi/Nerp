@@ -1,0 +1,17 @@
+{
+    "name": "NerpDev",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "Nerp": { "$path": "src" }
+        },
+        "ServerScriptService": {
+            "NerpServer": { "$path": "dev/server" }
+        },
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "NerpClient": { "$path": "dev/client" }
+            }
+        }
+    }
+}

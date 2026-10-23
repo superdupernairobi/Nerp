@@ -1,0 +1,16 @@
+/NerpDev.rbxlx
+/NerpDev.rbxl
+
+/*.rbxlx.lock
+/*.rbxl.lock
+
+sourcemap.json
+
+globalTypes.d.luau
+
+Packages/
+DevPackages/
+ServerPackages/
+
+*.rbxm
+build/
