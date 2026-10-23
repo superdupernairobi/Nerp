@@ -42,6 +42,14 @@ export type Target = {
 	buffer: any,
 }
 
+export type Buffer = {
+	push: (t: number, cf: CFrame) -> (),
+	newest: () -> number,
+	size: () -> number,
+	after: (t: number) -> Sample?,
+	before: (t: number) -> Sample?,
+}
+
 export type Output = {
 	id: string,
 	cf: CFrame,
