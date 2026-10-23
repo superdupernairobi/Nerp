@@ -29,7 +29,7 @@ end
 
 function clock.new(rate: number, preset: types.DelayPreset): Clock
 	const delay = delay_seconds(rate, preset)
-	const self = setmetatable({
+	const self: Clock = setmetatable({
 		_renderTime = 0,
 		_delay = delay,
 		_started = false,
@@ -37,21 +37,21 @@ function clock.new(rate: number, preset: types.DelayPreset): Clock
 	return self
 end
 
-function clock:now(): number
+function clock.now(self: Clock): number
 	return self._renderTime
 end
 
-function clock:jump(t: number)
+function clock.jump(self: Clock, t: number)
 	self._renderTime = t
 	self._started = true
 end
 
-function clock:delay(): number
+function clock.delay(self: Clock): number
 	return self._delay
 end
 
-function clock:advance(dt: number, newest: number): (number, boolean)
-	const target = newest - self._delay
+function clock.advance(self: Clock, dt: number, newest: number): (number, boolean)
+	const target: number = newest - self._delay
 
 	if not self._started then
 		self._renderTime = target
@@ -60,14 +60,14 @@ function clock:advance(dt: number, newest: number): (number, boolean)
 	end
 
 	self._renderTime += dt
-	const k = 1 - math.exp(-dt * SYNC_RATE)
+	const k: number = 1 - math.exp(-dt * SYNC_RATE)
 	self._renderTime += (target - self._renderTime) * k
 
 	if self._renderTime > newest then
 		self._renderTime = newest
 	end
 
-	const stale = self._renderTime < target - self._delay
+	const stale: boolean = self._renderTime < target - self._delay
 	if stale then
 		self._renderTime = target - self._delay
 	end
