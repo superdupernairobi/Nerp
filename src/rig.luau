@@ -54,7 +54,7 @@ function rig.new(world: WorldRoot, capacity: number): Rig
 	return self
 end
 
-function rig.attach(instance: BasePart | Model, root: BasePart?): types.RigKind
+function rig.attach(self: any, instance: BasePart | Model, root: BasePart?): types.RigKind
 	if instance:IsA("BasePart") then
 		return "part"
 	end
@@ -71,15 +71,14 @@ function rig.attach(instance: BasePart | Model, root: BasePart?): types.RigKind
 	return "model"
 end
 
-function rig.apply(target: types.Target, cf: CFrame)
+function rig.apply(self: any, target: types.Target, cf: CFrame)
 	if target.kind == "part" then
 		const part = target.instance :: BasePart
 		part.CFrame = cf
 		return
 	end
 
-	const model = target.instance :: Model
-	const root = model.PrimaryPart
+	const root = target.root
 	if root == nil then
 		return
 	end
@@ -116,4 +115,6 @@ end
 
 return table.freeze({
 	new = rig.new,
+	attach = rig.attach,
+	apply = rig.apply,
 })

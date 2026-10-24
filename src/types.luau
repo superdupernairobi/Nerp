@@ -35,20 +35,22 @@ export type TrackOptions = {
 
 export type RigKind = "part" | "model"
 
-export type Buffer = {
-	push: (t: number, cf: CFrame) -> (),
-	newest: () -> number,
-	size: () -> number,
-	after: (t: number) -> Sample?,
-	before: (t: number) -> Sample?,
-}
-
 export type Target = {
 	id: string,
 	instance: BasePart | Model,
 	kind: RigKind,
 	apply: boolean,
-	buffer: Buffer,
+	root: BasePart?,
+	buffer: any,
+}
+
+export type Store = {
+	track: (instance: BasePart | Model, options: TrackOptions?) -> Target,
+	untrack: (target: Target) -> (),
+	feed: (id: string, samples: { Sample }) -> (),
+	start: () -> (),
+	stop: () -> (),
+	stats: () -> Stats,
 }
 
 export type Output = {
@@ -64,11 +66,6 @@ export type Stats = {
 	renderTime: number,
 	newest: number,
 	delay: number,
-}
-
-export type Rig = {
-	attach: (instance: BasePart | Model) -> RigKind,
-	Apply: (target: Target, cf: CFrame) -> (),
 }
 
 export type Nerp = {
