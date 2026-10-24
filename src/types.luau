@@ -30,6 +30,7 @@ export type Clock = {
 
 export type TrackOptions = {
 	apply: boolean?,
+	root: BasePart?,
 }
 
 export type RigKind = "part" | "model"
@@ -44,7 +45,7 @@ export type Buffer = {
 
 export type Target = {
 	id: string,
-	instace: BasePart | Model,
+	instance: BasePart | Model,
 	kind: RigKind,
 	apply: boolean,
 	buffer: Buffer,
@@ -63,6 +64,11 @@ export type Stats = {
 	renderTime: number,
 	newest: number,
 	delay: number,
+}
+
+export type Rig = {
+	attach: (instance: BasePart | Model) -> RigKind,
+	Apply: (target: Target, cf: CFrame) -> (),
 }
 
 export type Nerp = {
