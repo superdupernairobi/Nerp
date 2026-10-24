@@ -68,13 +68,4 @@ export type Stats = {
 	delay: number,
 }
 
-export type Nerp = {
-	Track: (instance: BasePart | Model, options: TrackOptions?) -> Target,
-	Untrack: (target: Target) -> (),
-	Samples: () -> { Output },
-	Start: () -> (),
-	Stop: () -> (),
-	Stats: () -> Stats,
-}
-
 return {}
