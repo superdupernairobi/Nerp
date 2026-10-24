@@ -54,7 +54,7 @@ function rig.new(world: WorldRoot, capacity: number): Rig
 	return self
 end
 
-function rig.attach(self: Rig, instance: BasePart | Model): types.RigKind
+function rig.attach(instance: BasePart | Model): types.RigKind
 	if instance:IsA("BasePart") then
 		return "part"
 	end
@@ -71,7 +71,7 @@ function rig.attach(self: Rig, instance: BasePart | Model): types.RigKind
 	return "model"
 end
 
-function rig.apply(self: Rig, target: types.Target, cf: CFrame)
+function rig.apply(target: types.Target, cf: CFrame)
 	if target.kind == "part" then
 		const part = target.instance :: BasePart
 		part.CFrame = cf
