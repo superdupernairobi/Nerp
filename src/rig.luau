@@ -54,20 +54,20 @@ function rig.new(world: WorldRoot, capacity: number): Rig
 	return self
 end
 
-function rig.attach(instance: BasePart | Model): types.RigKind
+function rig.attach(instance: BasePart | Model, root: BasePart?): types.RigKind
 	if instance:IsA("BasePart") then
 		return "part"
 	end
 
 	const model = instance :: Model
-	const root: BasePart? = model.PrimaryPart
-	if root == nil then
+	const resolved: BasePart? = root or model.PrimaryPart
+	if resolved == nil then
 		error(
 			`Nerp: model "{model:GetFullName()}" has no primaryPart, set one or pass the root in the track options`,
 			0
 		)
 	end
-	check_welded(root :: BasePart, model)
+	check_welded(resolved :: BasePart, model)
 	return "model"
 end
 
