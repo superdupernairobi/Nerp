@@ -4,7 +4,7 @@ Interpolation for server driven transforms and the server stamps a `CFrame` with
 
 It does not do any networking. You simple send the batch, then you receive it.
 
-![Nerp smoothing a streamed CF](./docs/nerp-example.gif)
+![Nerp smoothing a streamed CF](/nerp-example.gif)
 
 ## Install
 

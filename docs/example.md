@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Example
 
-Two parts, same motion, one streamed.
+Two parts same motion, one streamed.
 
 | part           | how it moves                                                                                                    |
 |----------------|-----------------------------------------------------------------------------------------------------------------|
