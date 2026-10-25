@@ -1,0 +1,19 @@
+gitSourceBranch = "main"
+gitRepoUrl = "https://github.com/superdupernairobi/Nerp"
+
+[docusaurus]
+organizationName = "superdupernairobi"
+projectName = "Nerp"
+url = "https://superdupernairobi.github.io"
+baseUrl = "/Nerp/"
+title = "Nerp"
+tagline = "Interpolation for server driven transforms"
+description = "Interpolates server driven transforms on the client, buffers timestamped samples and plays them back at a fixed delay behind the newest one."
+favicon = "/favicon.png"
+
+[navar]
+title = "Nerp"
+
+[navbar.logo]
+src = "/logo.png"
+alt = "Nerp logo"
