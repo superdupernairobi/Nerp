@@ -24,6 +24,7 @@ end)
 
 const store = require("@self/store")
 const types = require("@self/types")
+const history = require("@self/history")
 
 export type Store = store.Store
 
@@ -54,16 +55,30 @@ Thee store holds every tracked target, so the render clock and the `PreRender` c
 local store = Nerp.new(20, "SMOOTH")
 ```
 
+@function Nerp.new
+
 @param rate number -- Sample spacing in seconds. Default to 20 when nil
 @param delay DelayPreset -- `"SMOOTH"` or `"LOW_LATENCY"`. Defaults to `"SMOOTH"`
+@param options StoreOptions -- Optional. `{extrapolate = 0.1}` lets the clock run past the newest sample instead of holding. Clamped to 0.1
 @return Store
 ]=]
 function Nerp.new(rate: number?, delay: types.DelayPreset?, options: types.StoreOptions?): Store
-	return store.new(rate, delay)
+	return store.new(rate, delay, options)
 end
 
-const history = require("@self/history")
+--[=[
+Creates a server-side transform history
 
+Records what the server sent so a lag compensation user can rewind without trusting a number that the client reports. Call `record` each tick on the server, `rewind` when resolving a shot.
+
+```lua
+local h = Nerp.history()
+h:record(player.Name, now, root.CFrame)
+```
+
+@function Nerp.history
+@return History
+]=]
 return table.freeze({
 	new = Nerp.new,
 	RATE = RATE,

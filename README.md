@@ -2,7 +2,7 @@
 
 Interpolation for server driven transforms and the server stamps a `CFrame` with a time, the client buffers it and plays it back slightly late, so 20Hz of updates becomes continuous motion at your framerate.
 
-It does not do any networking. You simple send the batch, then you receive it.
+It does not do any networking. You simply send the batch, then you receive it.
 
 ![Nerp smoothing a streamed CF](/nerp-example.gif)
 
@@ -28,6 +28,26 @@ remote.OnClientEvent:Connect(function(t, cf)
     store:feed(workspace.with_nerp:GetFullName(), { { t = t, cf = cf } })
 end)
 ```
+
+## Extrapolation
+Off by default. Pass it when a hold is more visible than a short guess:
+
+```lua
+local store = Nerp.new(20, "LOW_LATENCY", { extrapolate = 0.08 })
+```
+The clock may run up to 80ms past the newest sample before holding. The highest is 0.1 seconds.
+
+## Lag compensation
+`Nerp.history()` is a server-sided ring of what you recorded.
+```lua
+local h = Nerp.history()
+h:record(player.Name, now, root.CFrame)
+
+for _, entry in h:rewind(now - 0.12) do
+    -- raycast against entry.cf
+end
+```
+
 # The delay is a multiple and not a time
 `"SMOOTH"` is two samples of intervals, `"LOW_LATENCY"` is one and a half, so, at 20Hz that is 100ms and 75ms.
 
