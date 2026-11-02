@@ -8,13 +8,15 @@ const Nerp = require(ReplicatedStorage:WaitForChild("Nerp"))
 const remote = ReplicatedStorage:WaitForChild("NerpDemo") :: UnreliableRemoteEvent
 const withNerp = Workspace:WaitForChild("with_nerp") :: BasePart
 
-const demo = Nerp.new(20, "LOW_LATENCY")
+const demo = Nerp.new(20, "LOW_LATENCY", { extrapolate = 0.08 })
 demo:track(withNerp)
 demo:start()
 
 remote.OnClientEvent:Connect(function(t: number, cf: CFrame)
 	demo:feed(withNerp:GetFullName(), { { t = t, cf = cf } })
 end)
+
+const history = Nerp.history()
 
 task.spawn(function()
 	while true do
@@ -32,5 +34,10 @@ task.spawn(function()
 				s.delay
 			)
 		)
+
+		const now = Workspace:GetServerTimeNow()
+		history:record("probe", now, withNerp.CFrame)
+		const rewound = history:rewind(now - 0.12)
+		print(string.format("history: %d entries aat t-120ms", #rewound))
 	end
 end)
