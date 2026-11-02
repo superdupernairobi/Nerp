@@ -3,7 +3,7 @@
 --[=[
 Interpolation for server driven transforms
 
-The server puts a `CFrame` with a time and the client buffers it and then plays it back a little late, so 20Hz of updates becomees continuous motion at your framerate.
+The server puts a `CFrame` with a time and the client buffers it and then plays it back a little late, so 20Hz of updates becomes continuous motion at your framerate.
 
 Nerp does not own the network, you just send the batch and then you receive it.
 
