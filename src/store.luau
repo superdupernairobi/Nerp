@@ -23,6 +23,7 @@ export type Store = typeof(setmetatable(
 		_conn: RBXScriptConnection?,
 		_rate: number,
 		_preset: types.DelayPreset,
+		_extrapolate: number,
 	},
 	store
 ))
@@ -37,7 +38,10 @@ const function new_id(instance: Instance): string
 	return instance:GetFullName()
 end
 
-function store.new(rate: number?, preset: types.DelayPreset?): Store
+function store.new(rate: number?, preset: types.DelayPreset?, options: types.StoreOptions?): Store
+	const opts: types.StoreOptions = options or {}
+	const cap = opts.extrapolate or 0
+	const extrapolate = math.clamp(cap, 0, clock.MAX_EXTRAPOLATE)
 	const self: Store = (
 		setmetatable({
 			_clock = clock.new(rate or RATE, preset or DELAY),
@@ -50,6 +54,7 @@ function store.new(rate: number?, preset: types.DelayPreset?): Store
 			_conn = nil,
 			_rate = rate or RATE,
 			_preset = preset or DELAY,
+			_extrapolate = extrapolate,
 		}, store) :: any
 	) :: Store
 	return self
@@ -109,7 +114,13 @@ end
 
 function store.stats(self: Store): types.Stats
 	const count = #self._order
-	const newest = if count > 0 then self._order[1].buffer:newest() else 0
+	local newest = 0
+	for _, target in self._order do
+		const t = target.buffer:newest()
+		if t > newest then
+			newest = t
+		end
+	end
 	return self._measure:snapshot(count, self._clock:now(), newest, self._clock:delay())
 end
 
@@ -127,20 +138,54 @@ const function step(self: Store, dt: number)
 		end
 	end
 
-	const render_time, stale = self._clock:advance(dt, newest)
+	const render_time, stale, overshoot = self._clock:advance(dt, newest)
 	if stale then
 		self._measure:stale()
 	end
 
+	local at = render_time
+	local extrapolated = 0
+	if overshoot > 0 then
+		if self._extrapolate > 0 and overshoot <= self._extrapolate then
+			extrapolated = overshoot
+		else
+			at = newest
+		end
+	end
+
 	local parts = 0
 	for i, target in self._order do
-		const after = target.buffer:after(render_time)
-		const before = target.buffer:before(render_time)
+		const after = target.buffer:after(at)
+		const before = target.buffer:before(at)
 
-		if after ~= nil and before ~= nil and after.t > before.t then
+		if extrapolated > 0 then
+			if before == nil then
+				self._measure:hold()
+				continue
+			end
+
+			const prev = target.buffer:nth_newest(1)
+			if prev == nil or prev.t >= before.t then
+				self._frames[i] = before.cf
+			else
+				const leg =
+					before.cf:Lerp(prev.cf, -extrapolated / math.max(prev.t - before.t, 1e-4))
+				self._frames[i] = leg
+			end
+		elseif after ~= nil and before ~= nil and after.t > before.t then
 			const span = after.t - before.t
-			const alpha = (render_time - before.t) / span
-			self._frames[i] = before.cf:Lerp(after.cf, alpha)
+			const alpha = (at - before.t) / span
+			const near_sample = before.cf:Lerp(after.cf, alpha)
+
+			const prev = target.buffer:nth_newest(1)
+			if prev ~= nil and prev.t < before.t then
+				const prev_span = before.t - prev.t
+				const prev_alpha = (at - prev.t) / prev_span
+				const far_sample = prev.cf:Lerp(after.cf, prev_alpha)
+				self._frames[i] = near_sample:Lerp(far_sample, 0.5)
+			else
+				self._frames[i] = near_sample
+			end
 		elseif after ~= nil then
 			self._frames[i] = after.cf
 		elseif before ~= nil then
