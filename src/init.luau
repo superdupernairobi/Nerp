@@ -58,12 +58,15 @@ local store = Nerp.new(20, "SMOOTH")
 @param delay DelayPreset -- `"SMOOTH"` or `"LOW_LATENCY"`. Defaults to `"SMOOTH"`
 @return Store
 ]=]
-function Nerp.new(rate: number?, delay: types.DelayPreset?): Store
+function Nerp.new(rate: number?, delay: types.DelayPreset?, options: types.StoreOptions?): Store
 	return store.new(rate, delay)
 end
+
+const history = require("@self/history")
 
 return table.freeze({
 	new = Nerp.new,
 	RATE = RATE,
 	DELAY = DELAY,
+	history = history.new,
 })
