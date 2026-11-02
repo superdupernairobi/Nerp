@@ -12,7 +12,7 @@ It does not do any networking, you send the batch and you recieve the batch, kee
 
 ```toml
 [dependencies]
-Nerp = "superdupernairobi/nerp@0.1.0"
+Nerp = "superdupernairobi/nerp@0.2.0"
 ```
 Studio users: grab `Nerp.rbxm` from the latest release and put it in `ReplicatedStorage`.
 

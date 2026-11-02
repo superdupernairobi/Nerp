@@ -12,7 +12,7 @@ It does not do any networking. You simply send the batch, then you receive it.
 
 ```toml
 [dependencies]
-Nerp = "superdupernairobi/nerp@0.1.0"
+Nerp = "superdupernairobi/nerp@0.2.0"
 ```
 **Studio users:** download `Nerp.rbxm` from the latest releasse and right click `ReplicatedStorage` and pick Insert > Import Roblox Model
 
