@@ -10,6 +10,7 @@ const DELAY_MULTIPLE: { [types.DelayPreset]: number } = {
 const SYNC_RATE = 4
 
 const RESET_AFTER = 0.5
+const MAX_EXTRAPOLATE = 0.1
 
 const clock = {}
 clock.__index = clock
@@ -50,32 +51,30 @@ function clock.delay(self: Clock): number
 	return self._delay
 end
 
-function clock.advance(self: Clock, dt: number, newest: number): (number, boolean)
+function clock.advance(self: Clock, dt: number, newest: number): (number, boolean, number)
 	const target: number = newest - self._delay
 
 	if not self._started then
 		self._renderTime = target
 		self._started = true
-		return self._renderTime, false
+		return self._renderTime, false, 0
 	end
 
 	self._renderTime += dt
 	const k: number = 1 - math.exp(-dt * SYNC_RATE)
 	self._renderTime += (target - self._renderTime) * k
 
-	if self._renderTime > newest then
-		self._renderTime = newest
-	end
-
 	const stale: boolean = self._renderTime < target - self._delay
 	if stale then
 		self._renderTime = target - self._delay
 	end
 
-	return self._renderTime, stale
+	const extrapolated = math.max(0, self._renderTime - newest)
+	return self._renderTime, stale, extrapolated
 end
 
 return table.freeze({
 	new = clock.new,
 	RESET_AFTER = RESET_AFTER,
+	MAX_EXTRAPOLATE = MAX_EXTRAPOLATE,
 })

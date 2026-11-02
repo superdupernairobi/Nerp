@@ -48,6 +48,14 @@ function buffer.newest(self: Buffer): number
 	return self._samples[self._head].t
 end
 
+function buffer.nth_newest(self: Buffer, n: number): types.Sample?
+	if n >= self._count then
+		return nil
+	end
+	const index = (self._head - n - 1 + CAPACITY) % CAPACITY + 1
+	return self._samples[index]
+end
+
 function buffer.size(self: Buffer): number
 	return self._count
 end

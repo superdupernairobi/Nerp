@@ -24,13 +24,17 @@ export type ClockConfig = {
 export type Clock = {
 	now: () -> number,
 	jump: (t: number) -> (),
-	advance: (dt: number, newest: number) -> (number, boolean),
+	advance: (dt: number, newest: number) -> (number, boolean, number),
 	delay: () -> number,
 }
 
 export type TrackOptions = {
 	apply: boolean?,
 	root: BasePart?,
+}
+
+export type StoreOptions = {
+	extrapolate: number?,
 }
 
 export type RigKind = "part" | "model"
@@ -42,6 +46,17 @@ export type Target = {
 	apply: boolean,
 	root: BasePart?,
 	buffer: any,
+}
+
+export type Rewrite = {
+	id: string,
+	cf: CFrame,
+}
+
+export type History = {
+	record: (id: string, t: number, cf: CFrame) -> (),
+	rewind: (t: number) -> { Rewrite },
+	clear: () -> (),
 }
 
 export type Store = {
