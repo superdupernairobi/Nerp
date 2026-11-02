@@ -168,9 +168,12 @@ const function step(self: Store, dt: number)
 			if prev == nil or prev.t >= before.t then
 				self._frames[i] = before.cf
 			else
-				const leg =
-					before.cf:Lerp(prev.cf, -extrapolated / math.max(prev.t - before.t, 1e-4))
-				self._frames[i] = leg
+				const back = before.t - prev.t
+				if back <= 1e-4 then
+					self._frames[i] = before.cf
+				else
+					self._frames[i] = before.cf:Lerp(prev.cf, -extrapolated / back)
+				end
 			end
 		elseif after ~= nil and before ~= nil and after.t > before.t then
 			const span = after.t - before.t
